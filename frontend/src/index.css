@@ -1,0 +1,440 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.6;
+}
+
+.app {
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  z-index: 100;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #10b981;
+  background: #d1fae5;
+}
+
+.main {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page {
+  padding-bottom: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 24px 0 12px;
+  color: #374151;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.phase-badge {
+  display: inline-block;
+  background: #10b981;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.goal-card {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.progression-note {
+  background: #dbeafe;
+  border-left: 4px solid #3b82f6;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.drills {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drill-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.drill-card.completed {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.drill-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.drill-checkbox {
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.drill-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #111827;
+}
+
+.duration {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.instructions {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card.highlight {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.handicap-display {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.handicap-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: #10b981;
+  margin: 12px 0;
+}
+
+.handicap-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.metrics-trend {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.trend-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.trend-row:last-child {
+  border-bottom: none;
+}
+
+.trend-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.metrics-form,
+.handicap-form {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.metrics-form h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 20px 0 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.metrics-form h3:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.btn-primary {
+  width: 100%;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #059669;
+}
+
+.history {
+  margin-top: 32px;
+}
+
+.history-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.history-values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.notes {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f3f4f6;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.current-handicap {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.handicap-big {
+  font-size: 64px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.handicap-label {
+  font-size: 16px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.current-handicap .handicap-date {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 8px;
+}
+
+.handicap-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.handicap-entry {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.handicap-entry .handicap-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  min-width: 60px;
+}
+
+.handicap-change {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.handicap-change.positive {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.handicap-change.negative {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.handicap-entry .handicap-date {
+  font-size: 13px;
+  color: #6b7280;
+  margin-left: auto;
+}
+
+.handicap-notes {
+  width: 100%;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 16px;
+}
