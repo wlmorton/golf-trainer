@@ -7,8 +7,3 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
-
-  - type: static
-    name: golf-trainer-frontend
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: ./frontend/dist
