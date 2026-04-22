@@ -11,6 +11,9 @@ function TodayWorkout() {
   const [showScoreModal, setShowScoreModal] = useState(null)
   const [scoreInput, setScoreInput] = useState('')
   const [notesInput, setNotesInput] = useState('')
+  const [showHistory, setShowHistory] = useState(null)
+  const [drillHistory, setDrillHistory] = useState([])
+  const [drillStats, setDrillStats] = useState(null)
 
   useEffect(() => {
     fetchTodayWorkout()
@@ -48,6 +51,22 @@ function TodayWorkout() {
       console.error('Failed to fetch workout:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchDrillHistory = async (drillId) => {
+    try {
+      const [historyRes, statsRes] = await Promise.all([
+        fetch(`${API_URL}/workouts/drill-history/${drillId}`),
+        fetch(`${API_URL}/workouts/drill-stats/${drillId}`)
+      ])
+      const history = await historyRes.json()
+      const stats = await statsRes.json()
+      setDrillHistory(history)
+      setDrillStats(stats)
+      setShowHistory(drillId)
+    } catch (err) {
+      console.error('Failed to fetch drill history:', err)
     }
   }
 
@@ -167,10 +186,17 @@ function TodayWorkout() {
                 onChange={() => toggleDrill(drill.id, drill.completed)}
                 className="drill-checkbox"
               />
-              <div>
+              <div className="drill-title-section">
                 <h3>{drill.name}</h3>
                 <span className="duration">{drill.duration}</span>
               </div>
+              <button 
+                onClick={() => fetchDrillHistory(drill.id)} 
+                className="history-btn"
+                title="View history"
+              >
+                📊
+              </button>
             </div>
             <p className="instructions">{drill.instructions}</p>
             {drill.completed && drill.score && (
@@ -192,12 +218,13 @@ function TodayWorkout() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Log Drill Completion</h3>
             <div className="form-group">
-              <label>Score/Result (optional)</label>
+              <label>Score/Result</label>
               <input
                 type="text"
                 value={scoreInput}
                 onChange={(e) => setScoreInput(e.target.value)}
-                placeholder="e.g. 42/50, 105 mph, 75%"
+                placeholder="e.g. 42/50, 25 points, 105 mph"
+                autoFocus
               />
             </div>
             <div className="form-group">
@@ -217,6 +244,71 @@ function TodayWorkout() {
                 Save
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showHistory && (
+        <div className="modal-overlay" onClick={() => setShowHistory(null)}>
+          <div className="modal history-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Drill History</h3>
+            
+            {drillStats && (
+              <div className="stats-summary">
+                <div className="stat-item">
+                  <span className="stat-label">Total Sessions</span>
+                  <span className="stat-value">{drillStats.total_completions}</span>
+                </div>
+                {drillStats.average && (
+                  <>
+                    <div className="stat-item">
+                      <span className="stat-label">Average</span>
+                      <span className="stat-value">{drillStats.average}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Best</span>
+                      <span className="stat-value">{drillStats.best}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Trend</span>
+                      <span className={`stat-value ${drillStats.trend === 'improving' ? 'positive' : ''}`}>
+                        {drillStats.trend === 'improving' ? '📈' : '➡️'} {drillStats.trend}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            <div className="history-list">
+              <h4>Recent Sessions</h4>
+              {drillHistory.length === 0 ? (
+                <p className="no-history">No history yet. Complete this drill to start tracking!</p>
+              ) : (
+                drillHistory.map((entry, idx) => (
+                  <div key={idx} className="history-entry">
+                    <div className="history-entry-header">
+                      <span className="history-week">Week {entry.week}, Day {entry.day}</span>
+                      <span className="history-date">
+                        {new Date(entry.completed_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {entry.score && (
+                      <div className="history-score">
+                        <strong>Score:</strong> {entry.score}
+                      </div>
+                    )}
+                    {entry.notes && (
+                      <div className="history-notes">{entry.notes}</div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            <button onClick={() => setShowHistory(null)} className="btn-primary">
+              Close
+            </button>
           </div>
         </div>
       )}

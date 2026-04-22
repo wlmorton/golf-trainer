@@ -120,25 +120,76 @@ def uncomplete_drill(completion: DrillCompletion):
     conn.close()
     return {"status": "success"}
 
-@router.get("/drill-data/{week}/{day}/{drill_id}")
-def get_drill_data(week: int, day: int, drill_id: str):
-    """Get completion data for a specific drill."""
+@router.get("/drill-history/{drill_id}")
+def get_drill_history(drill_id: str, limit: int = 10):
+    """Get completion history for a specific drill across all sessions."""
     conn = get_db()
     c = conn.cursor()
     c.execute("""
-        SELECT score, notes, completed_at FROM drill_completions 
-        WHERE week_number = ? AND day_number = ? AND drill_id = ?
+        SELECT week_number, day_number, score, notes, completed_at 
+        FROM drill_completions 
+        WHERE drill_id = ?
         ORDER BY completed_at DESC
-        LIMIT 1
-    """, (week, day, drill_id))
-    row = c.fetchone()
+        LIMIT ?
+    """, (drill_id, limit))
+    rows = c.fetchall()
     conn.close()
     
-    if not row:
+    history = []
+    for row in rows:
+        history.append({
+            "week": row[0],
+            "day": row[1],
+            "score": row[2],
+            "notes": row[3],
+            "completed_at": row[4]
+        })
+    
+    return history
+
+@router.get("/drill-stats/{drill_id}")
+def get_drill_stats(drill_id: str):
+    """Get statistics for a specific drill."""
+    conn = get_db()
+    c = conn.cursor()
+    
+    # Get all numeric scores
+    c.execute("""
+        SELECT score, completed_at FROM drill_completions 
+        WHERE drill_id = ? AND score IS NOT NULL
+        ORDER BY completed_at DESC
+    """, (drill_id,))
+    rows = c.fetchall()
+    conn.close()
+    
+    if not rows:
         return None
     
+    # Try to extract numeric values from scores
+    numeric_scores = []
+    for row in rows:
+        score_str = row[0]
+        if score_str:
+            # Try to extract first number from string (e.g., "42/50" -> 42, "25 points" -> 25)
+            import re
+            numbers = re.findall(r'\d+\.?\d*', score_str)
+            if numbers:
+                try:
+                    numeric_scores.append(float(numbers[0]))
+                except:
+                    pass
+    
+    if not numeric_scores:
+        return {
+            "total_completions": len(rows),
+            "recent_scores": [row[0] for row in rows[:5]]
+        }
+    
     return {
-        "score": row[0],
-        "notes": row[1],
-        "completed_at": row[2]
+        "total_completions": len(rows),
+        "average": round(sum(numeric_scores) / len(numeric_scores), 1),
+        "best": max(numeric_scores),
+        "recent": numeric_scores[0] if numeric_scores else None,
+        "trend": "improving" if len(numeric_scores) >= 2 and numeric_scores[0] > numeric_scores[-1] else "stable",
+        "recent_scores": [row[0] for row in rows[:5]]
     }
