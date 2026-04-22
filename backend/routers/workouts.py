@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 from datetime import datetime, timedelta
 from training_plan import get_day_plan, get_phase
 from database import get_db
@@ -36,14 +37,40 @@ def get_today_workout():
     conn = get_db()
     c = conn.cursor()
     c.execute("""
-        SELECT drill_id FROM drill_completions 
+        SELECT drill_id, score, notes FROM drill_completions 
         WHERE week_number = ? AND day_number = ?
     """, (week, day))
-    completed = {row[0] for row in c.fetchall()}
+    completions = {row[0]: {"score": row[1], "notes": row[2]} for row in c.fetchall()}
     conn.close()
     
     for drill in plan.get("drills", []):
-        drill["completed"] = drill["id"] in completed
+        drill["completed"] = drill["id"] in completions
+        if drill["id"] in completions:
+            drill["score"] = completions[drill["id"]]["score"]
+            drill["notes"] = completions[drill["id"]]["notes"]
+    
+    return plan
+
+@router.get("/workout/{week_number}/{day_number}")
+def get_specific_workout(week_number: int, day_number: int):
+    """Get workout for a specific week and day."""
+    plan = get_day_plan(week_number, day_number)
+    
+    # Check which drills are already completed
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("""
+        SELECT drill_id, score, notes FROM drill_completions 
+        WHERE week_number = ? AND day_number = ?
+    """, (week_number, day_number))
+    completions = {row[0]: {"score": row[1], "notes": row[2]} for row in c.fetchall()}
+    conn.close()
+    
+    for drill in plan.get("drills", []):
+        drill["completed"] = drill["id"] in completions
+        if drill["id"] in completions:
+            drill["score"] = completions[drill["id"]]["score"]
+            drill["notes"] = completions[drill["id"]]["notes"]
     
     return plan
 
@@ -64,6 +91,8 @@ class DrillCompletion(BaseModel):
     week: int
     day: int
     drill_id: str
+    score: Optional[str] = None
+    notes: Optional[str] = None
 
 @router.post("/complete-drill")
 def complete_drill(completion: DrillCompletion):
@@ -71,9 +100,9 @@ def complete_drill(completion: DrillCompletion):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
-        INSERT INTO drill_completions (week_number, day_number, drill_id)
-        VALUES (?, ?, ?)
-    """, (completion.week, completion.day, completion.drill_id))
+        INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes)
+        VALUES (?, ?, ?, ?, ?)
+    """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes))
     conn.commit()
     conn.close()
     return {"status": "success"}
@@ -90,3 +119,26 @@ def uncomplete_drill(completion: DrillCompletion):
     conn.commit()
     conn.close()
     return {"status": "success"}
+
+@router.get("/drill-data/{week}/{day}/{drill_id}")
+def get_drill_data(week: int, day: int, drill_id: str):
+    """Get completion data for a specific drill."""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("""
+        SELECT score, notes, completed_at FROM drill_completions 
+        WHERE week_number = ? AND day_number = ? AND drill_id = ?
+        ORDER BY completed_at DESC
+        LIMIT 1
+    """, (week, day, drill_id))
+    row = c.fetchone()
+    conn.close()
+    
+    if not row:
+        return None
+    
+    return {
+        "score": row[0],
+        "notes": row[1],
+        "completed_at": row[2]
+    }

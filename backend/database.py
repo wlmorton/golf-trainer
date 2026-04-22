@@ -50,6 +50,8 @@ def init_db():
             week_number INTEGER NOT NULL,
             day_number INTEGER NOT NULL,
             drill_id TEXT NOT NULL,
+            score TEXT,
+            notes TEXT,
             completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)

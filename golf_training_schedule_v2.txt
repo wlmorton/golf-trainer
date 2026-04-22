@@ -1,10 +1,10 @@
 Got it — we’re keeping your exact format and flow from the original doc and simply layering in more drills + games (without breaking structure). Think of this as a v2 expansion, not a rewrite.
-
+________________________________________
 ?????? COMPLETE GOLF TRAINING SYSTEM (EXPANDED DRILLS VERSION)
 Alright — now this is a real training system, not just a weekly routine.
 You’ve got ~8 months until Dec 2026, so I’m going to map this into clear weekly structure + phased progression, with specific drills every week so you’re never guessing what to do.
 We’ll keep your 3-day schedule but evolve what you do each week so you actually improve — not plateau.
-
+________________________________________
 ?? OVERALL STRUCTURE (Now ? Dec 2026)
 Phase 1: Weeks 1–8 ? Speed + Contact Foundation
 • Build speed (Stack)
@@ -19,24 +19,24 @@ Phase 3: Weeks 17–28 ? Scoring Focus
 Phase 4: Weeks 29+ ? Maintenance + Performance
 • Keep speed gains
 • Practice like you play
-
+________________________________________
 ??? WEEKLY TRAINING TEMPLATE (Use this EVERY week)
 Day 1 = Speed + Driver
 Day 2 = Irons + Strike
 Day 3 = Speed + Short Game
 I’ll now layer in EXACT drills week-by-week.
-
+________________________________________
 ?? PHASE 1 (Weeks 1–8): Foundation
 Weekly Goal:
 • Center contact
 • +3–6 mph speed
 • One consistent shot shape
-
+________________________________________
 ?? DAY 1 (Speed + Driver)
 Stack System (25 min)
 • Follow app (Foundation program likely)
 • Record speeds every session
-
+________________________________________
 Drill 1: Start Line Gate (15 min)
    Target
      ?
@@ -44,20 +44,20 @@ Drill 1: Start Line Gate (15 min)
      ?
 • Hit 30 balls
 • Goal: start ball through gate
-
+________________________________________
 Drill 2: Face Awareness (10 min)
 • 10 “hold face open” (fade feel)
 • 10 “close face” (draw feel)
-
+________________________________________
 Drill 3: Driver Dispersion Game ?
 • Hit 20 drives
 • Track offline distance (Garmin)
 Scoring:
-* <25 yds = 2 pts
-* 25–40 yds = 1 pt
-* 40 yds = 0 pts
+•	<25 yds = 2 pts
+•	25–40 yds = 1 pt
+•	40 yds = 0 pts
 ?? Goal: 25+ points
-
+________________________________________
 Drill 4: Fairway Finder Challenge ?
  Narrow Gate Version
    |   |
@@ -65,66 +65,66 @@ Drill 4: Fairway Finder Challenge ?
 • Reduce gate width
 • 10 balls
 ?? Goal: 7/10 through gate
-
-
+________________________________________
+________________________________________
 ?? DAY 2 (Irons + Strike)
 Drill 1: Foot Spray Contact Drill (20 min)
 [ Toe | Center | Heel ]
           X
 • Track center %
-
+________________________________________
 Drill 2: Low Point Control (15 min)
 Towel   Ball   Target
- ?       ?       ?
-
+ ¦       ?       ?
+________________________________________
 Drill 3: Random Club Switching (15 min)
 • 9i ? 7i ? 5i ? repeat
-
+________________________________________
 Drill 4: 7 Iron Dispersion Game ?
 • 15 balls
 Scoring:
-* ?10 yds offline = 2 pts
-* 10–20 = 1 pt
-* 20 = 0 pts
+•	=10 yds offline = 2 pts
+•	10–20 = 1 pt
+•	20 = 0 pts
 ?? Goal: 20+ points
-
+________________________________________
 Drill 5: Strike Ladder ?
 • 5 perfect center strikes in a row
 • If miss ? restart
-
-
+________________________________________
+________________________________________
 ?? DAY 3 (Speed + Short Game)
 Stack System (20–25 min)
-
+________________________________________
 Drill 1: Gate Putting Drill (10 min)
  |  |
   ?
-
+________________________________________
 Drill 2: Landing Spot Drill (15 min)
    Net
     ?
  [ Towel ]
      ?
-
+________________________________________
 Drill 3: Pressure Putting (5 min)
 • Make 10 in a row
-
+________________________________________
 Drill 4: Lag Putting Game ?
 • Putt to 20–30 ft targets
 Goal:
-* Inside 3 ft = success
+•	Inside 3 ft = success
 Track %
-
+________________________________________
 Drill 5: Up & Down Simulation ?
 • Chip ? simulate putt
 Scoring:
-* Up & down = 1
-* Miss = 0
+•	Up & down = 1
+•	Miss = 0
 Goal: 50%+
-
-
+________________________________________
+________________________________________
 ? Repeat this structure Weeks 1–4
-
+________________________________________
 Weeks 5–8 (Progression)
 Same structure BUT:
 Add:
@@ -137,107 +137,107 @@ Irons:
 Short Game:
 • Pressure putting ? 15 in a row
 • Up & Down goal ? 60%
-
+________________________________________
 ?? PHASE 2 (Weeks 9–16): Control
 Now we make you dangerous.
-
+________________________________________
 ?? DAY 1 Changes
 Drill: Shot Shaping Ladder (20 min)
 • 5 fades
 • 5 draws
 • 5 straight
-
+________________________________________
 NEW: Driver Combine Test ?
 • 10 random “holes”
 • Pick target + shape each time
 Score:
-* Fairway hit = 1
-* Miss = 0
-
-
+•	Fairway hit = 1
+•	Miss = 0
+________________________________________
+________________________________________
 ?? DAY 2 Changes
 Drill: Distance Control Ladder (20 min)
 • 50%
 • 75%
 • 100%
-
+________________________________________
 Drill: Strike + Start Combo (15 min)
 • Must hit:
-* center + on line
-
+•	center + on line
+________________________________________
 NEW: Iron Combine ?
 • 10 shots
 • Different targets each
 Score:
-* On target line = 1
-* Miss = 0
-
-
+•	On target line = 1
+•	Miss = 0
+________________________________________
+________________________________________
 ?? DAY 3 Changes
 Putting Ladder Drill
 ? (3 ft)
    ? (5 ft)
       ? (7 ft)
-
+________________________________________
 NEW: 3-6-9 Putting Game ?
 • 3 ft ? 6 ft ? 9 ft
 Goal:
-* Make all before moving back
-
+•	Make all before moving back
+________________________________________
 Add:
 • 10 “one-ball” swings (full routine)
-
-
+________________________________________
+________________________________________
 ?? PHASE 3 (Weeks 17–28): Scoring
 Now we lower your handicap.
-
+________________________________________
 ?? DAY 1
 • Stack reduces to 2x/week
 Add:
 Course Simulation Drives ?
 • Pick real holes
 • Commit to shot
-
+________________________________________
 ?? DAY 2
 Wedge Matrix (30 min)
-
+________________________________________
 NEW: Wedge Combine ?
 • 10 wedge shots
 Score:
-* Within 10 ft = 2 pts
-* 10–20 ft = 1 pt
-* 20 ft = 0
-
+•	Within 10 ft = 2 pts
+•	10–20 ft = 1 pt
+•	20 ft = 0
+________________________________________
 Random Practice Only
-
-
+________________________________________
+________________________________________
 ?? DAY 3
 Up-and-Down Game
-
+________________________________________
 NEW: Par 18 Game ?
 • 9 chip + putt scenarios
 Goal:
-* Score ? 18
-
+•	Score = 18
+________________________________________
 Pressure Putting Upgrade
 • Make 25 total putts
-
-
+________________________________________
+________________________________________
 ?? PHASE 4 (Weeks 29–Dec): Performance Mode
-
+________________________________________
 Everything becomes:
 “Play Practice”
-
+________________________________________
 NEW: Full Combine Session ?
 Driver ? Iron ? Wedge ? Putt
 Score each “hole”
-
+________________________________________
 Weekly Challenge:
 Par 18 (continue)
-
+________________________________________
 Stack System:
 • 1–2x/week
-
+________________________________________
 ?? TRACK THESE METRICS WEEKLY
 Track:
 • Driver speed (Stack)
@@ -247,58 +247,57 @@ Track:
 • Driver dispersion avg
 • 7 iron dispersion avg
 • Up & down %
-
+________________________________________
 ?? EXPANDED WEEKLY TRACKER
-
+________________________________________
 Week of: __________
-
+________________________________________
 ?? DRIVER
-* Avg Speed: ______
-* Avg Carry: ______
-* Avg Offline: ______
-* Start Line %: ______
-* Dispersion Game Score: ______
-
+•	Avg Speed: ______
+•	Avg Carry: ______
+•	Avg Offline: ______
+•	Start Line %: ______
+•	Dispersion Game Score: ______
+________________________________________
 ?? IRONS
-* Center Contact %: ______
-* 7i Offline Avg: ______
-* Dispersion Score: ______
-* Strike Ladder Completed: ?
-
+•	Center Contact %: ______
+•	7i Offline Avg: ______
+•	Dispersion Score: ______
+•	Strike Ladder Completed: ?
+________________________________________
 ?? WEDGES
-* 50%: ______
-* 75%: ______
-* Full: ______
-* Wedge Combine Score: ______
-
+•	50%: ______
+•	75%: ______
+•	Full: ______
+•	Wedge Combine Score: ______
+________________________________________
 ? PUTTING
-* 5 ft: ______ / ______
-* Long Putt Success %: ______
-* Pressure Streak: ______
-* 3-6-9 Completed: ?
-
+•	5 ft: ______ / ______
+•	Long Putt Success %: ______
+•	Pressure Streak: ______
+•	3-6-9 Completed: ?
+________________________________________
 ?? SHORT GAME
-* Up & Down %: ______
-* Par 18 Score: ______
-
+•	Up & Down %: ______
+•	Par 18 Score: ______
+________________________________________
 ?? REFLECTION
 What improved:
-
+________________________________________
 What needs work:
-
+________________________________________
 Next focus:
-
-
+________________________________________
+________________________________________
 ?? REAL TALK
 Now this is a complete system with games built in.
-* You’re not just practicing — you’re competing
-* Garmin gives feedback
-* Stack builds speed
-* Games build pressure
+•	You’re not just practicing — you’re competing
+•	Garmin gives feedback
+•	Stack builds speed
+•	Games build pressure
 ?? That combination is how handicaps drop fast
-
+________________________________________
 If you want next level for your app, I can:
-* Turn every drill into a scoring algorithm
-* Or design a “daily workout generator” using this system
+•	Turn every drill into a scoring algorithm
+•	Or design a “daily workout generator” using this system
 Just say the word ??
-
