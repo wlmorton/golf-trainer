@@ -48,7 +48,13 @@ body {
 .main {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
 }
 
 .page {
@@ -57,31 +63,36 @@ body {
 
 .workout-nav {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
   background: white;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .nav-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex: 1;
+  min-width: 120px;
+  justify-content: center;
 }
 
 .nav-btn {
   background: #f3f4f6;
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 .nav-btn:hover {
@@ -91,8 +102,9 @@ body {
 .nav-label {
   font-weight: 600;
   color: #111827;
-  min-width: 80px;
+  min-width: 70px;
   text-align: center;
+  font-size: 14px;
 }
 
 .today-btn {
@@ -105,10 +117,42 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .today-btn:hover {
   background: #059669;
+}
+
+@media (max-width: 480px) {
+  .workout-nav {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .nav-section {
+    gap: 6px;
+    min-width: 100px;
+  }
+
+  .nav-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .nav-label {
+    min-width: 60px;
+    font-size: 13px;
+  }
+
+  .today-btn {
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 }
 
 .drill-score,
@@ -147,6 +191,16 @@ body {
   max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 16px;
+    border-radius: 12px;
+    max-height: 85vh;
+  }
 }
 
 .modal h3 {
@@ -190,11 +244,24 @@ h1 {
   color: #111827;
 }
 
+@media (max-width: 480px) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
 h2 {
   font-size: 20px;
   font-weight: 600;
   margin: 24px 0 12px;
   color: #374151;
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 18px;
+    margin: 20px 0 10px;
+  }
 }
 
 .subtitle {
@@ -243,6 +310,12 @@ h2 {
   border-radius: 12px;
   padding: 16px;
   transition: all 0.2s;
+}
+
+@media (max-width: 480px) {
+  .drill-card {
+    padding: 12px;
+  }
 }
 
 .drill-card.completed {
@@ -560,6 +633,13 @@ h2 {
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin: 20px 0;
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    gap: 8px;
+    margin: 16px 0;
+  }
 }
 
 .stat-card {
