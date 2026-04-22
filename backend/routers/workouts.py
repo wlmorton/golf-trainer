@@ -93,6 +93,7 @@ class DrillCompletion(BaseModel):
     drill_id: str
     score: Optional[str] = None
     notes: Optional[str] = None
+    shot_data: Optional[str] = None  # JSON string of shot-by-shot data
 
 @router.post("/complete-drill")
 def complete_drill(completion: DrillCompletion):
@@ -100,9 +101,9 @@ def complete_drill(completion: DrillCompletion):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
-        INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes)
-        VALUES (?, ?, ?, ?, ?)
-    """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes))
+        INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes, shot_data)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes, completion.shot_data))
     conn.commit()
     conn.close()
     return {"status": "success"}
@@ -126,7 +127,7 @@ def get_drill_history(drill_id: str, limit: int = 10):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
-        SELECT week_number, day_number, score, notes, completed_at 
+        SELECT week_number, day_number, score, notes, shot_data, completed_at 
         FROM drill_completions 
         WHERE drill_id = ?
         ORDER BY completed_at DESC
@@ -142,7 +143,8 @@ def get_drill_history(drill_id: str, limit: int = 10):
             "day": row[1],
             "score": row[2],
             "notes": row[3],
-            "completed_at": row[4]
+            "shot_data": row[4],
+            "completed_at": row[5]
         })
     
     return history

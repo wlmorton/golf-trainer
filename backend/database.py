@@ -52,6 +52,7 @@ def init_db():
             drill_id TEXT NOT NULL,
             score TEXT,
             notes TEXT,
+            shot_data TEXT,
             completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)

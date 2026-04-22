@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config'
+import ShotTracker from '../components/ShotTracker'
 
 function TodayWorkout() {
   const [workout, setWorkout] = useState(null)
@@ -9,11 +10,28 @@ function TodayWorkout() {
   const [currentWeek, setCurrentWeek] = useState(1)
   const [currentDay, setCurrentDay] = useState(1)
   const [showScoreModal, setShowScoreModal] = useState(null)
+  const [showShotTracker, setShowShotTracker] = useState(null)
   const [scoreInput, setScoreInput] = useState('')
   const [notesInput, setNotesInput] = useState('')
   const [showHistory, setShowHistory] = useState(null)
   const [drillHistory, setDrillHistory] = useState([])
   const [drillStats, setDrillStats] = useState(null)
+
+  // List of drill IDs that use shot tracking
+  const GAME_DRILLS = [
+    'driver_dispersion_game',
+    'fairway_finder',
+    '7iron_dispersion_game',
+    'strike_ladder',
+    'lag_putting_game',
+    'up_down_simulation',
+    'driver_combine',
+    'iron_combine',
+    '3_6_9_putting',
+    'wedge_combine',
+    'par_18_game',
+    'full_combine'
+  ]
 
   useEffect(() => {
     fetchTodayWorkout()
@@ -88,10 +106,35 @@ function TodayWorkout() {
         console.error('Failed to toggle drill:', err)
       }
     } else {
-      // Show score modal
-      setShowScoreModal(drillId)
-      setScoreInput('')
-      setNotesInput('')
+      // Check if this is a game drill
+      if (GAME_DRILLS.includes(drillId)) {
+        setShowShotTracker(drillId)
+      } else {
+        setShowScoreModal(drillId)
+        setScoreInput('')
+        setNotesInput('')
+      }
+    }
+  }
+
+  const handleShotTrackerComplete = async (totalScore, shotData) => {
+    try {
+      await fetch(`${API_URL}/workouts/complete-drill`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: selectedWeek,
+          day: selectedDay,
+          drill_id: showShotTracker,
+          score: `${totalScore} points`,
+          shot_data: JSON.stringify(shotData),
+          notes: null
+        })
+      })
+      setShowShotTracker(null)
+      fetchSpecificWorkout(selectedWeek, selectedDay)
+    } catch (err) {
+      console.error('Failed to save drill:', err)
     }
   }
 
@@ -213,6 +256,18 @@ function TodayWorkout() {
         ))}
       </div>
 
+      {showShotTracker && (
+        <div className="modal-overlay" onClick={() => setShowShotTracker(null)}>
+          <div className="modal tracker-modal" onClick={(e) => e.stopPropagation()}>
+            <ShotTracker 
+              drillId={showShotTracker}
+              onComplete={handleShotTrackerComplete}
+              onCancel={() => setShowShotTracker(null)}
+            />
+          </div>
+        </div>
+      )}
+
       {showScoreModal && (
         <div className="modal-overlay" onClick={() => setShowScoreModal(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -285,24 +340,34 @@ function TodayWorkout() {
               {drillHistory.length === 0 ? (
                 <p className="no-history">No history yet. Complete this drill to start tracking!</p>
               ) : (
-                drillHistory.map((entry, idx) => (
-                  <div key={idx} className="history-entry">
-                    <div className="history-entry-header">
-                      <span className="history-week">Week {entry.week}, Day {entry.day}</span>
-                      <span className="history-date">
-                        {new Date(entry.completed_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    {entry.score && (
-                      <div className="history-score">
-                        <strong>Score:</strong> {entry.score}
+                drillHistory.map((entry, idx) => {
+                  const shotData = entry.shot_data ? JSON.parse(entry.shot_data) : null
+                  return (
+                    <div key={idx} className="history-entry">
+                      <div className="history-entry-header">
+                        <span className="history-week">Week {entry.week}, Day {entry.day}</span>
+                        <span className="history-date">
+                          {new Date(entry.completed_at).toLocaleDateString()}
+                        </span>
                       </div>
-                    )}
-                    {entry.notes && (
-                      <div className="history-notes">{entry.notes}</div>
-                    )}
-                  </div>
-                ))
+                      {entry.score && (
+                        <div className="history-score">
+                          <strong>Score:</strong> {entry.score}
+                        </div>
+                      )}
+                      {shotData && shotData.stats && (
+                        <div className="shot-stats">
+                          {shotData.stats.avg && (
+                            <span>Avg: {shotData.stats.avg} | Best: {shotData.stats.best} | Worst: {shotData.stats.worst}</span>
+                          )}
+                        </div>
+                      )}
+                      {entry.notes && (
+                        <div className="history-notes">{entry.notes}</div>
+                      )}
+                    </div>
+                  )
+                })
               )}
             </div>
 
