@@ -1180,3 +1180,129 @@ h2 {
   font-size: 12px;
   margin-top: 8px;
 }
+
+
+/* Settings Page Styles */
+.settings-section {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.settings-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.settings-description {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.current-week-display {
+  background: #f0fdf4;
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #065f46;
+}
+
+.date-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.button-group button {
+  flex: 1;
+}
+
+.settings-info {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.settings-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+.settings-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-info li {
+  padding: 8px 0;
+  color: #6b7280;
+  font-size: 14px;
+  padding-left: 24px;
+  position: relative;
+}
+
+.settings-info li:before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.schedule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.schedule-item {
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.schedule-item strong {
+  color: #111827;
+  margin-right: 8px;
+}
+
+@media (max-width: 480px) {
+  .settings-section {
+    padding: 16px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}

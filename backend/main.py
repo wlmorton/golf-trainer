@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
-from routers import workouts, metrics, progress, adaptive
+from routers import workouts, metrics, progress, adaptive, settings
 
 app = FastAPI(title="Golf Trainer API")
 
@@ -20,6 +20,7 @@ app.include_router(workouts.router, prefix="/workouts", tags=["workouts"])
 app.include_router(metrics.router, prefix="/metrics", tags=["metrics"])
 app.include_router(progress.router, prefix="/progress", tags=["progress"])
 app.include_router(adaptive.router, prefix="/adaptive", tags=["adaptive"])
+app.include_router(settings.router, prefix="/settings", tags=["settings"])
 
 @app.get("/")
 def root():

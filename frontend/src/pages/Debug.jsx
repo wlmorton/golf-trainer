@@ -11,11 +11,20 @@ function Debug() {
 
   const fetchCompletions = async () => {
     try {
+      console.log('Fetching completions from:', `${API_URL}/workouts/debug/all-completions`)
       const res = await fetch(`${API_URL}/workouts/debug/all-completions`)
+      console.log('Response status:', res.status)
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+      
       const data = await res.json()
+      console.log('Completions data:', data)
       setCompletions(data)
     } catch (err) {
       console.error('Failed to fetch completions:', err)
+      alert('Error loading debug data: ' + err.message)
     } finally {
       setLoading(false)
     }

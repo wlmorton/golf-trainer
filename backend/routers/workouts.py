@@ -7,11 +7,28 @@ from database import get_db
 
 router = APIRouter()
 
-START_DATE = datetime(2026, 4, 20)  # Week 1 starts April 20, 2026
+def get_start_date():
+    """Get the training start date from settings."""
+    conn = get_db()
+    c = conn.cursor()
+    
+    try:
+        c.execute("SELECT value FROM settings WHERE key = 'start_date'")
+        row = c.fetchone()
+        if row:
+            return datetime.fromisoformat(row[0])
+    except:
+        pass
+    finally:
+        conn.close()
+    
+    # Default to April 20, 2026 if not set
+    return datetime(2026, 4, 20)
 
 def get_current_week() -> int:
     """Calculate current week number based on start date."""
-    delta = datetime.now() - START_DATE
+    start_date = get_start_date()
+    delta = datetime.now() - start_date
     week = (delta.days // 7) + 1
     return max(1, week)
 

@@ -62,8 +62,16 @@ function TodayWorkout() {
   const fetchSpecificWorkout = async (week, day) => {
     try {
       setLoading(true)
+      console.log(`Fetching workout for week ${week}, day ${day}`)
       const res = await fetch(`${API_URL}/workouts/workout/${week}/${day}`)
       const data = await res.json()
+      console.log('Workout data received:', data)
+      console.log('Drills with completion status:', data.drills?.map(d => ({
+        id: d.id,
+        name: d.name,
+        completed: d.completed,
+        score: d.score
+      })))
       setWorkout(data)
     } catch (err) {
       console.error('Failed to fetch workout:', err)
