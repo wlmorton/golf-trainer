@@ -119,7 +119,15 @@ function TodayWorkout() {
 
   const handleShotTrackerComplete = async (totalScore, shotData) => {
     try {
-      await fetch(`${API_URL}/workouts/complete-drill`, {
+      console.log('Saving drill completion:', {
+        week: selectedWeek,
+        day: selectedDay,
+        drill_id: showShotTracker,
+        score: `${totalScore} points`,
+        shot_data: JSON.stringify(shotData)
+      })
+      
+      const response = await fetch(`${API_URL}/workouts/complete-drill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -131,16 +139,33 @@ function TodayWorkout() {
           notes: null
         })
       })
+      
+      const result = await response.json()
+      console.log('Save result:', result)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       setShowShotTracker(null)
       fetchSpecificWorkout(selectedWeek, selectedDay)
+      alert('Drill saved successfully!')
     } catch (err) {
       console.error('Failed to save drill:', err)
+      alert('Error saving drill: ' + err.message)
     }
   }
 
   const saveDrillCompletion = async () => {
     try {
-      await fetch(`${API_URL}/workouts/complete-drill`, {
+      console.log('Saving drill completion:', {
+        week: selectedWeek,
+        day: selectedDay,
+        drill_id: showScoreModal,
+        score: scoreInput
+      })
+      
+      const response = await fetch(`${API_URL}/workouts/complete-drill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,10 +176,20 @@ function TodayWorkout() {
           notes: notesInput || null
         })
       })
+      
+      const result = await response.json()
+      console.log('Save result:', result)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       setShowScoreModal(null)
       fetchSpecificWorkout(selectedWeek, selectedDay)
+      alert('Drill saved successfully!')
     } catch (err) {
       console.error('Failed to save drill:', err)
+      alert('Error saving drill: ' + err.message)
     }
   }
 

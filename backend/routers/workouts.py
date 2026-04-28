@@ -98,15 +98,26 @@ class DrillCompletion(BaseModel):
 @router.post("/complete-drill")
 def complete_drill(completion: DrillCompletion):
     """Mark a drill as completed."""
+    print(f"Received drill completion: week={completion.week}, day={completion.day}, drill_id={completion.drill_id}, score={completion.score}")
+    
     conn = get_db()
     c = conn.cursor()
-    c.execute("""
-        INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes, shot_data)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes, completion.shot_data))
-    conn.commit()
-    conn.close()
-    return {"status": "success"}
+    
+    try:
+        c.execute("""
+            INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes, shot_data)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes, completion.shot_data))
+        conn.commit()
+        print(f"Successfully saved drill completion with id: {c.lastrowid}")
+    except Exception as e:
+        print(f"Error saving drill completion: {e}")
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+    
+    return {"status": "success", "message": "Drill completion saved"}
 
 @router.delete("/complete-drill")
 def uncomplete_drill(completion: DrillCompletion):
