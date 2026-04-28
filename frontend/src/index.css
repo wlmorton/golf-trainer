@@ -485,8 +485,43 @@ h2 {
 
 .shot-input-section {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 20px;
+}
+
+.direction-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.direction-btn {
+  padding: 10px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #6b7280;
+}
+
+.direction-btn:hover {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.direction-btn.active {
+  border-color: #10b981;
+  background: #10b981;
+  color: white;
+}
+
+.directional-input-group {
+  display: flex;
+  gap: 8px;
 }
 
 .shot-input {
@@ -567,6 +602,56 @@ h2 {
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin-bottom: 20px;
+}
+
+.stat-box.miss-pattern {
+  grid-column: 1 / -1;
+}
+
+.pattern-visual {
+  margin-top: 8px;
+}
+
+.pattern-bar {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 40px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pattern-left {
+  background: #fecaca;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 40px;
+}
+
+.pattern-straight {
+  background: #d1fae5;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  min-width: 30px;
+}
+
+.pattern-right {
+  background: #dbeafe;
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 40px;
 }
 
 .stat-box {

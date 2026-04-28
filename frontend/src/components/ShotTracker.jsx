@@ -6,9 +6,11 @@ const DRILL_CONFIGS = {
     name: "Driver Dispersion Game",
     shots: 20,
     metric: "Offline (yards)",
+    metricType: "directional", // left/right tracking
     scoring: (value) => {
-      if (value < 25) return 2
-      if (value <= 40) return 1
+      const distance = Math.abs(parseFloat(value))
+      if (distance < 25) return 2
+      if (distance <= 40) return 1
       return 0
     },
     goal: 25
@@ -17,6 +19,7 @@ const DRILL_CONFIGS = {
     name: "Fairway Finder Challenge",
     shots: 10,
     metric: "Through gate? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: 7
   },
@@ -24,9 +27,11 @@ const DRILL_CONFIGS = {
     name: "7 Iron Dispersion Game",
     shots: 15,
     metric: "Offline (yards)",
+    metricType: "directional", // left/right tracking
     scoring: (value) => {
-      if (value <= 10) return 2
-      if (value <= 20) return 1
+      const distance = Math.abs(parseFloat(value))
+      if (distance <= 10) return 2
+      if (distance <= 20) return 1
       return 0
     },
     goal: 20
@@ -104,6 +109,7 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
   const config = DRILL_CONFIGS[drillId]
   const [shots, setShots] = useState([])
   const [currentInput, setCurrentInput] = useState('')
+  const [direction, setDirection] = useState('straight') // left, right, straight
 
   if (!config) {
     return (
@@ -118,6 +124,22 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
     if (!currentInput) return
     
     let value = currentInput.toLowerCase()
+    
+    // Handle directional input
+    if (config.metricType === 'directional') {
+      const numValue = parseFloat(value)
+      if (!isNaN(numValue)) {
+        // Store as signed number: negative = left, positive = right
+        const signedValue = direction === 'left' ? -Math.abs(numValue) : 
+                           direction === 'right' ? Math.abs(numValue) : 0
+        setShots([...shots, signedValue])
+        setCurrentInput('')
+        setDirection('straight')
+        return
+      }
+    }
+    
+    // Handle boolean input
     if (value === 'yes' || value === 'y') value = 'yes'
     if (value === 'no' || value === 'n') value = 'no'
     
@@ -146,14 +168,41 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
     let avg = null
     let best = null
     let worst = null
+    let leftCount = 0
+    let rightCount = 0
+    let straightCount = 0
     
     if (numericShots.length > 0) {
-      avg = (numericShots.reduce((a, b) => a + b, 0) / numericShots.length).toFixed(1)
-      best = Math.min(...numericShots)
-      worst = Math.max(...numericShots)
+      // For directional metrics, calculate absolute values for avg/best/worst
+      if (config.metricType === 'directional') {
+        const absValues = numericShots.map(s => Math.abs(s))
+        avg = (absValues.reduce((a, b) => a + b, 0) / absValues.length).toFixed(1)
+        best = Math.min(...absValues)
+        worst = Math.max(...absValues)
+        
+        // Count directions
+        numericShots.forEach(shot => {
+          if (shot < -0.5) leftCount++
+          else if (shot > 0.5) rightCount++
+          else straightCount++
+        })
+      } else {
+        avg = (numericShots.reduce((a, b) => a + b, 0) / numericShots.length).toFixed(1)
+        best = Math.min(...numericShots)
+        worst = Math.max(...numericShots)
+      }
     }
 
-    return { totalScore, avg, best, worst, count: shots.length }
+    return { 
+      totalScore, 
+      avg, 
+      best, 
+      worst, 
+      count: shots.length,
+      leftCount,
+      rightCount,
+      straightCount
+    }
   }
 
   const handleComplete = () => {
@@ -185,18 +234,60 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
       </div>
 
       <div className="shot-input-section">
-        <input
-          type="text"
-          value={currentInput}
-          onChange={(e) => setCurrentInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && addShot()}
-          placeholder={config.metric.includes('yes/no') ? 'yes or no' : 'Enter value'}
-          autoFocus
-          className="shot-input"
-        />
-        <button onClick={addShot} className="btn-primary" disabled={!currentInput}>
-          Add Shot
-        </button>
+        {config.metricType === 'directional' ? (
+          <>
+            <div className="direction-buttons">
+              <button 
+                onClick={() => setDirection('left')} 
+                className={`direction-btn ${direction === 'left' ? 'active' : ''}`}
+              >
+                ← Left
+              </button>
+              <button 
+                onClick={() => setDirection('straight')} 
+                className={`direction-btn ${direction === 'straight' ? 'active' : ''}`}
+              >
+                Straight
+              </button>
+              <button 
+                onClick={() => setDirection('right')} 
+                className={`direction-btn ${direction === 'right' ? 'active' : ''}`}
+              >
+                Right →
+              </button>
+            </div>
+            <div className="directional-input-group">
+              <input
+                type="number"
+                step="0.5"
+                value={currentInput}
+                onChange={(e) => setCurrentInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addShot()}
+                placeholder="Distance (yards)"
+                autoFocus
+                className="shot-input"
+              />
+              <button onClick={addShot} className="btn-primary" disabled={!currentInput}>
+                Add Shot
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              value={currentInput}
+              onChange={(e) => setCurrentInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && addShot()}
+              placeholder={config.metric.includes('yes/no') ? 'yes or no' : 'Enter value'}
+              autoFocus
+              className="shot-input"
+            />
+            <button onClick={addShot} className="btn-primary" disabled={!currentInput}>
+              Add Shot
+            </button>
+          </>
+        )}
       </div>
 
       {shots.length > 0 && (
@@ -206,13 +297,21 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
             <span>Result</span>
             <span>Points</span>
           </div>
-          {shots.map((shot, idx) => (
-            <div key={idx} className="shot-row">
-              <span>{idx + 1}</span>
-              <span>{typeof shot === 'number' ? shot.toFixed(1) : shot}</span>
-              <span className="shot-points">{config.scoring(shot)}</span>
-            </div>
-          ))}
+          {shots.map((shot, idx) => {
+            const displayValue = typeof shot === 'number' && config.metricType === 'directional'
+              ? `${Math.abs(shot).toFixed(1)} ${shot < -0.5 ? '←' : shot > 0.5 ? '→' : '•'}`
+              : typeof shot === 'number' 
+                ? shot.toFixed(1) 
+                : shot
+            
+            return (
+              <div key={idx} className="shot-row">
+                <span>{idx + 1}</span>
+                <span>{displayValue}</span>
+                <span className="shot-points">{config.scoring(shot)}</span>
+              </div>
+            )
+          })}
           <button onClick={removeLastShot} className="btn-remove">
             Remove Last
           </button>
@@ -238,6 +337,26 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
               <div className="stat-box">
                 <span className="stat-label">Worst</span>
                 <span className="stat-value">{stats.worst}</span>
+              </div>
+            </>
+          )}
+          {config.metricType === 'directional' && stats.leftCount + stats.rightCount > 0 && (
+            <>
+              <div className="stat-box miss-pattern">
+                <span className="stat-label">Miss Pattern</span>
+                <div className="pattern-visual">
+                  <div className="pattern-bar">
+                    <span className="pattern-left" style={{width: `${(stats.leftCount / shots.length) * 100}%`}}>
+                      ← {stats.leftCount}
+                    </span>
+                    <span className="pattern-straight">
+                      {stats.straightCount}
+                    </span>
+                    <span className="pattern-right" style={{width: `${(stats.rightCount / shots.length) * 100}%`}}>
+                      {stats.rightCount} →
+                    </span>
+                  </div>
+                </div>
               </div>
             </>
           )}
