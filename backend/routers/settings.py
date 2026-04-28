@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 from database import get_db
@@ -68,19 +68,36 @@ def set_start_date(update: StartDateUpdate):
     try:
         start_date = datetime.fromisoformat(update.start_date)
     except ValueError:
+        conn.close()
         return {"error": "Invalid date format. Use YYYY-MM-DD"}
     
-    # Insert or update
-    c.execute("""
-        INSERT INTO settings (key, value, updated_at)
-        VALUES ('start_date', ?, CURRENT_TIMESTAMP)
-        ON CONFLICT(key) DO UPDATE SET 
-            value = excluded.value,
-            updated_at = CURRENT_TIMESTAMP
-    """, (update.start_date,))
-    
-    conn.commit()
-    conn.close()
+    try:
+        # Check if exists
+        c.execute("SELECT key FROM settings WHERE key = 'start_date'")
+        exists = c.fetchone()
+        
+        if exists:
+            # Update existing
+            c.execute("""
+                UPDATE settings 
+                SET value = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE key = 'start_date'
+            """, (update.start_date,))
+        else:
+            # Insert new
+            c.execute("""
+                INSERT INTO settings (key, value, updated_at)
+                VALUES ('start_date', ?, CURRENT_TIMESTAMP)
+            """, (update.start_date,))
+        
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        print(f"Error saving start date: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
     
     # Calculate current week
     delta = datetime.now() - start_date
