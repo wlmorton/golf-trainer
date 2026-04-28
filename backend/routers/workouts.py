@@ -121,6 +121,34 @@ def uncomplete_drill(completion: DrillCompletion):
     conn.close()
     return {"status": "success"}
 
+@router.get("/debug/all-completions")
+def get_all_completions():
+    """Debug endpoint to see all drill completions."""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("""
+        SELECT id, week_number, day_number, drill_id, score, shot_data, completed_at
+        FROM drill_completions
+        ORDER BY completed_at DESC
+        LIMIT 50
+    """)
+    rows = c.fetchall()
+    conn.close()
+    
+    completions = []
+    for row in rows:
+        completions.append({
+            "id": row[0],
+            "week": row[1],
+            "day": row[2],
+            "drill_id": row[3],
+            "score": row[4],
+            "shot_data": row[5],
+            "completed_at": row[6]
+        })
+    
+    return completions
+
 @router.get("/drill-history/{drill_id}")
 def get_drill_history(drill_id: str, limit: int = 10):
     """Get completion history for a specific drill across all sessions."""
@@ -155,10 +183,10 @@ def get_drill_stats(drill_id: str):
     conn = get_db()
     c = conn.cursor()
     
-    # Get all numeric scores
+    # Get all scores
     c.execute("""
-        SELECT score, completed_at FROM drill_completions 
-        WHERE drill_id = ? AND score IS NOT NULL
+        SELECT score, shot_data, completed_at FROM drill_completions 
+        WHERE drill_id = ?
         ORDER BY completed_at DESC
     """, (drill_id,))
     rows = c.fetchall()
@@ -167,12 +195,29 @@ def get_drill_stats(drill_id: str):
     if not rows:
         return None
     
-    # Try to extract numeric values from scores
+    # Try to extract numeric values from scores or shot_data
     numeric_scores = []
+    recent_scores = []
+    
     for row in rows:
         score_str = row[0]
+        shot_data_str = row[1]
+        
+        # First try shot_data
+        if shot_data_str:
+            try:
+                import json
+                shot_data = json.loads(shot_data_str)
+                if 'stats' in shot_data and 'totalScore' in shot_data['stats']:
+                    numeric_scores.append(float(shot_data['stats']['totalScore']))
+                    recent_scores.append(f"{shot_data['stats']['totalScore']} points")
+                    continue
+            except:
+                pass
+        
+        # Then try score string
         if score_str:
-            # Try to extract first number from string (e.g., "42/50" -> 42, "25 points" -> 25)
+            recent_scores.append(score_str)
             import re
             numbers = re.findall(r'\d+\.?\d*', score_str)
             if numbers:
@@ -181,17 +226,17 @@ def get_drill_stats(drill_id: str):
                 except:
                     pass
     
-    if not numeric_scores:
-        return {
-            "total_completions": len(rows),
-            "recent_scores": [row[0] for row in rows[:5]]
-        }
-    
-    return {
+    result = {
         "total_completions": len(rows),
-        "average": round(sum(numeric_scores) / len(numeric_scores), 1),
-        "best": max(numeric_scores),
-        "recent": numeric_scores[0] if numeric_scores else None,
-        "trend": "improving" if len(numeric_scores) >= 2 and numeric_scores[0] > numeric_scores[-1] else "stable",
-        "recent_scores": [row[0] for row in rows[:5]]
+        "recent_scores": recent_scores[:5]
     }
+    
+    if numeric_scores:
+        result.update({
+            "average": round(sum(numeric_scores) / len(numeric_scores), 1),
+            "best": max(numeric_scores),
+            "recent": numeric_scores[0] if numeric_scores else None,
+            "trend": "improving" if len(numeric_scores) >= 2 and numeric_scores[0] > numeric_scores[-1] else "stable"
+        })
+    
+    return result

@@ -4,6 +4,7 @@ import Progress from './pages/Progress'
 import Metrics from './pages/Metrics'
 import Handicap from './pages/Handicap'
 import WeeklyReview from './pages/WeeklyReview'
+import Debug from './pages/Debug'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/progress" element={<Progress />} />
             <Route path="/metrics" element={<Metrics />} />
             <Route path="/handicap" element={<Handicap />} />
+            <Route path="/debug" element={<Debug />} />
           </Routes>
         </main>
       </div>
