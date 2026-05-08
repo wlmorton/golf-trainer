@@ -9,12 +9,15 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.0
 
-  # Frontend Static Site
+  # Frontend Static Site  
   - type: web
     name: golf-trainer-frontend
     runtime: static
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
     staticPublishPath: frontend/dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
     routes:
       - type: rewrite
         source: /*
