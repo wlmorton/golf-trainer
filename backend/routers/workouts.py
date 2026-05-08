@@ -34,15 +34,21 @@ def get_current_week() -> int:
     return max(1, week)
 
 def get_current_day() -> int:
-    """Return current day of week (1=Mon, 2=Wed, 3=Fri for training days)."""
-    weekday = datetime.now().weekday()  # 0=Mon, 6=Sun
-    if weekday in [0, 1]:
+    """Return current training day (1, 2, or 3) based on days since start date."""
+    start_date = get_start_date()
+    delta = datetime.now() - start_date
+    days_elapsed = delta.days
+    
+    # Calculate which day within the current week (0-6)
+    day_in_week = days_elapsed % 7
+    
+    # Map to training days: 0-1 = Day 1, 2-4 = Day 2, 5-6 = Day 3
+    if day_in_week <= 1:
         return 1
-    elif weekday in [2, 3]:
+    elif day_in_week <= 4:
         return 2
-    elif weekday in [4, 5, 6]:
+    else:
         return 3
-    return 1
 
 @router.get("/today")
 def get_today_workout():
