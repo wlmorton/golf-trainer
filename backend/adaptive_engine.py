@@ -91,9 +91,14 @@ def get_weekly_performance(week: int) -> Dict:
     drill_performance = {}
     
     for row in rows:
-        drill_id = row[0]
-        score_str = row[1]
-        shot_data_str = row[2]
+        if USE_POSTGRES:
+            drill_id = row['drill_id']
+            score_str = row['score']
+            shot_data_str = row['shot_data']
+        else:
+            drill_id = row[0]
+            score_str = row[1]
+            shot_data_str = row[2]
         
         if drill_id not in drill_performance:
             drill_performance[drill_id] = []
@@ -292,6 +297,7 @@ def get_latest_adjustments(week: int) -> Optional[Dict]:
     conn.close()
     
     if row:
-        return json.loads(row[0])
+        adjustments_str = row['adjustments'] if USE_POSTGRES else row[0]
+        return json.loads(adjustments_str)
     
     return None

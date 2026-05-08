@@ -14,7 +14,8 @@ def get_progress_overview():
     
     # Total drills completed
     c.execute("SELECT COUNT(*) FROM drill_completions")
-    total_drills = c.fetchone()[0]
+    row = c.fetchone()
+    total_drills = row['count'] if USE_POSTGRES else row[0]
     
     # Drills this week
     c.execute("""
@@ -24,7 +25,8 @@ def get_progress_overview():
         SELECT COUNT(*) FROM drill_completions 
         WHERE week_number = ?
     """, (week,))
-    drills_this_week = c.fetchone()[0]
+    row = c.fetchone()
+    drills_this_week = row['count'] if USE_POSTGRES else row[0]
     
     # Latest handicap
     c.execute("""
@@ -55,8 +57,8 @@ def get_progress_overview():
         "current_week": week,
         "total_drills_completed": total_drills,
         "drills_this_week": drills_this_week,
-        "current_handicap": handicap_row[0] if handicap_row else None,
-        "handicap_logged_at": handicap_row[1] if handicap_row else None,
+        "current_handicap": (handicap_row['handicap'] if USE_POSTGRES else handicap_row[0]) if handicap_row else None,
+        "handicap_logged_at": (handicap_row['logged_at'] if USE_POSTGRES else handicap_row[1]) if handicap_row else None,
         "metrics_trend": metrics_trend
     }
 

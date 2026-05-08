@@ -60,7 +60,14 @@ def get_today_workout():
         SELECT drill_id, score, notes FROM drill_completions 
         WHERE week_number = ? AND day_number = ?
     """, (week, day))
-    completions = {row[0]: {"score": row[1], "notes": row[2]} for row in c.fetchall()}
+    
+    rows = c.fetchall()
+    if USE_POSTGRES:
+        # RealDictCursor returns dicts
+        completions = {row['drill_id']: {"score": row['score'], "notes": row['notes']} for row in rows}
+    else:
+        # SQLite returns tuples
+        completions = {row[0]: {"score": row[1], "notes": row[2]} for row in rows}
     conn.close()
     
     for drill in plan.get("drills", []):
@@ -86,7 +93,12 @@ def get_specific_workout(week_number: int, day_number: int):
         SELECT drill_id, score, notes FROM drill_completions 
         WHERE week_number = ? AND day_number = ?
     """, (week_number, day_number))
-    completions = {row[0]: {"score": row[1], "notes": row[2]} for row in c.fetchall()}
+    
+    rows = c.fetchall()
+    if USE_POSTGRES:
+        completions = {row['drill_id']: {"score": row['score'], "notes": row['notes']} for row in rows}
+    else:
+        completions = {row[0]: {"score": row[1], "notes": row[2]} for row in rows}
     conn.close()
     
     for drill in plan.get("drills", []):
@@ -212,14 +224,24 @@ def get_drill_history(drill_id: str, limit: int = 10):
     
     history = []
     for row in rows:
-        history.append({
-            "week": row[0],
-            "day": row[1],
-            "score": row[2],
-            "notes": row[3],
-            "shot_data": row[4],
-            "completed_at": row[5]
-        })
+        if USE_POSTGRES:
+            history.append({
+                "week": row['week_number'],
+                "day": row['day_number'],
+                "score": row['score'],
+                "notes": row['notes'],
+                "shot_data": row['shot_data'],
+                "completed_at": row['completed_at']
+            })
+        else:
+            history.append({
+                "week": row[0],
+                "day": row[1],
+                "score": row[2],
+                "notes": row[3],
+                "shot_data": row[4],
+                "completed_at": row[5]
+            })
     
     return history
 
@@ -250,8 +272,12 @@ def get_drill_stats(drill_id: str):
     recent_scores = []
     
     for row in rows:
-        score_str = row[0]
-        shot_data_str = row[1]
+        if USE_POSTGRES:
+            score_str = row['score']
+            shot_data_str = row['shot_data']
+        else:
+            score_str = row[0]
+            shot_data_str = row[1]
         
         # First try shot_data
         if shot_data_str:

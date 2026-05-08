@@ -29,7 +29,7 @@ def get_start_date():
     conn.close()
     
     if row:
-        start_date_str = row[0] if USE_POSTGRES else row[0]
+        start_date_str = row['value'] if USE_POSTGRES else row[0]
         start_date = datetime.fromisoformat(start_date_str)
         delta = datetime.now() - start_date
         current_week = (delta.days // 7) + 1
