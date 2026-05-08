@@ -46,13 +46,13 @@ PHASE1_DAYS = {
             },
             {
                 "id": "start_line_gate",
-                "name": "Start Line Gate Drill",
+                "name": "Start Line Gate Drill 🎯",
                 "duration": "15 min",
                 "instructions": "Hit 30 balls through gate (2 alignment sticks ~2 yards apart). Goal: start ball through gate.",
             },
             {
                 "id": "face_awareness",
-                "name": "Face Awareness Drill",
+                "name": "Face Awareness Drill 🎯",
                 "duration": "10 min",
                 "instructions": "Hit 10 'hold face open' (fade feel) then 10 'close face' (draw feel). Learning face control.",
             },
@@ -75,19 +75,19 @@ PHASE1_DAYS = {
         "drills": [
             {
                 "id": "foot_spray",
-                "name": "Foot Spray Contact Drill",
+                "name": "Foot Spray Contact Drill 🎯",
                 "duration": "20 min",
                 "instructions": "Spray clubface with foot spray. Track center contact % and miss pattern (toe/heel/center).",
             },
             {
                 "id": "low_point_towel",
-                "name": "Low Point Control (Towel Drill)",
+                "name": "Low Point Control (Towel Drill) 🎯",
                 "duration": "15 min",
                 "instructions": "Place towel 2-3 inches behind ball. Don't hit towel.",
             },
             {
                 "id": "random_club",
-                "name": "Random Club Switching",
+                "name": "Random Club Switching 🎯",
                 "duration": "15 min",
                 "instructions": "Rotate clubs every swing: 9i → 7i → 5i → repeat.",
             },
@@ -116,19 +116,19 @@ PHASE1_DAYS = {
             },
             {
                 "id": "gate_putting",
-                "name": "Gate Putting Drill",
+                "name": "Gate Putting Drill 🎯",
                 "duration": "10 min",
                 "instructions": "Place 2 tees slightly wider than putter. 50 reps from 5 ft.",
             },
             {
                 "id": "landing_spot",
-                "name": "Landing Spot Drill",
+                "name": "Landing Spot Drill 🎯",
                 "duration": "15 min",
                 "instructions": "Place a towel as landing zone. Chip into net trying to hit the towel.",
             },
             {
                 "id": "pressure_putting",
-                "name": "Pressure Putting",
+                "name": "Pressure Putting 🎯",
                 "duration": "5 min",
                 "instructions": "Make 10 putts in a row from 5 ft. Miss = restart.",
             },
@@ -166,7 +166,7 @@ PHASE2_DAYS = {
             },
             {
                 "id": "shot_shaping_ladder",
-                "name": "Shot Shaping Ladder",
+                "name": "Shot Shaping Ladder 🎯",
                 "duration": "20 min",
                 "instructions": "Hit 5 fades, 5 draws, 5 straight. Must complete the full sequence without restarting.",
             },
@@ -183,13 +183,13 @@ PHASE2_DAYS = {
         "drills": [
             {
                 "id": "distance_control_ladder",
-                "name": "Distance Control Ladder",
+                "name": "Distance Control Ladder 🎯",
                 "duration": "20 min",
                 "instructions": "Pick one club. Hit at 50%, 75%, 100% swing. Repeat 3x each. Track carry with Garmin.",
             },
             {
                 "id": "strike_start_combo",
-                "name": "Strike + Start Combo",
+                "name": "Strike + Start Combo 🎯",
                 "duration": "15 min",
                 "instructions": "Each shot must have center contact AND start on your intended line.",
             },
@@ -212,7 +212,7 @@ PHASE2_DAYS = {
             },
             {
                 "id": "putting_ladder",
-                "name": "Putting Ladder Drill",
+                "name": "Putting Ladder Drill 🎯",
                 "duration": "15 min",
                 "instructions": "Make putts from 3 ft, then 5 ft, then 7 ft. Must make all at each distance before moving back.",
             },
@@ -224,7 +224,7 @@ PHASE2_DAYS = {
             },
             {
                 "id": "one_ball_routine",
-                "name": "One-Ball Routine",
+                "name": "One-Ball Routine 🎯",
                 "duration": "10 min",
                 "instructions": "10 shots with full pre-shot routine before each one.",
             },
@@ -255,7 +255,7 @@ PHASE3_DAYS = {
         "drills": [
             {
                 "id": "wedge_matrix",
-                "name": "Wedge Matrix",
+                "name": "Wedge Matrix 🎯",
                 "duration": "30 min",
                 "instructions": "Build 3 distances per wedge: half swing, 3/4 swing, full swing. Track carry with Garmin. Random practice only — NO block practice.",
             },
@@ -272,7 +272,7 @@ PHASE3_DAYS = {
         "drills": [
             {
                 "id": "up_and_down",
-                "name": "Up-and-Down Game",
+                "name": "Up-and-Down Game 🎯",
                 "duration": "20 min",
                 "instructions": "Chip → putt simulation. Track your % up-and-down success rate.",
             },
@@ -284,7 +284,7 @@ PHASE3_DAYS = {
             },
             {
                 "id": "pressure_putting_upgrade",
-                "name": "Pressure Putting Upgrade",
+                "name": "Pressure Putting Upgrade 🎯",
                 "duration": "15 min",
                 "instructions": "Make 25 total putts from 5 ft. Track every miss.",
             },
@@ -315,7 +315,7 @@ PHASE4_DAYS = {
         "drills": [
             {
                 "id": "play_practice_full",
-                "name": "Play Practice Sequence",
+                "name": "Play Practice Sequence 🎯",
                 "duration": "45 min",
                 "instructions": "Driver → Iron → Wedge → repeat. Simulate real holes. No block practice.",
             },
@@ -332,7 +332,7 @@ PHASE4_DAYS = {
             },
             {
                 "id": "pressure_putting_final",
-                "name": "Pressure Putting",
+                "name": "Pressure Putting 🎯",
                 "duration": "10 min",
                 "instructions": "Make 25 total putts from 5 ft. Track misses.",
             },

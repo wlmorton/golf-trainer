@@ -4,10 +4,10 @@ import { useState } from 'react'
 const DRILL_CONFIGS = {
   stack_system: {
     name: "Stack System",
-    shots: 1, // Single entry for the session
+    shots: 1,
     metric: "Speed Tracking",
     metricType: "stack_speed",
-    scoring: () => 0, // No scoring, just tracking
+    scoring: () => 0,
     goal: "Track progress"
   },
   stack_short: {
@@ -26,11 +26,171 @@ const DRILL_CONFIGS = {
     scoring: () => 0,
     goal: "Track progress"
   },
+  start_line_gate: {
+    name: "Start Line Gate Drill",
+    shots: 30,
+    metric: "Through gate? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Track success rate"
+  },
+  foot_spray: {
+    name: "Foot Spray Contact Drill",
+    shots: 20,
+    metric: "Center contact? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Track center contact %"
+  },
+  low_point_towel: {
+    name: "Low Point Control (Towel Drill)",
+    shots: 20,
+    metric: "Missed towel? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Don't hit towel"
+  },
+  face_awareness: {
+    name: "Face Awareness Drill",
+    shots: 20,
+    metric: "Achieved shape? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Control face angle"
+  },
+  random_club: {
+    name: "Random Club Switching",
+    shots: 15,
+    metric: "Good contact? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Adaptability"
+  },
+  gate_putting: {
+    name: "Gate Putting Drill",
+    shots: 50,
+    metric: "Through gate? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "50 reps"
+  },
+  landing_spot: {
+    name: "Landing Spot Drill",
+    shots: 20,
+    metric: "Hit towel? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Precision"
+  },
+  pressure_putting: {
+    name: "Pressure Putting",
+    shots: 10,
+    metric: "Made? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Make 10 in a row"
+  },
+  shot_shaping_ladder: {
+    name: "Shot Shaping Ladder",
+    shots: 15,
+    metric: "Achieved shape? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "5 fades, 5 draws, 5 straight"
+  },
+  distance_control_ladder: {
+    name: "Distance Control Ladder",
+    shots: 9,
+    metric: "Carry distance (yards)",
+    metricType: "numeric",
+    scoring: () => 1,
+    goal: "Track distances"
+  },
+  strike_start_combo: {
+    name: "Strike + Start Combo",
+    shots: 15,
+    metric: "Both good? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Center + line"
+  },
+  putting_ladder: {
+    name: "Putting Ladder Drill",
+    shots: 3,
+    metric: "Made? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Make all 3 distances"
+  },
+  one_ball_routine: {
+    name: "One-Ball Routine",
+    shots: 10,
+    metric: "Good shot? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Full routine"
+  },
+  wedge_matrix: {
+    name: "Wedge Matrix",
+    shots: 9,
+    metric: "Carry distance (yards)",
+    metricType: "numeric",
+    scoring: () => 1,
+    goal: "Build distance matrix"
+  },
+  up_and_down: {
+    name: "Up-and-Down Game",
+    shots: 10,
+    metric: "Up & down? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Track success %"
+  },
+  pressure_putting_upgrade: {
+    name: "Pressure Putting Upgrade",
+    shots: 25,
+    metric: "Made? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Make 25 from 5ft"
+  },
+  pressure_putting_final: {
+    name: "Pressure Putting",
+    shots: 25,
+    metric: "Made? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Make 25 from 5ft"
+  },
+  course_sim_drives: {
+    name: "Course Simulation Drives",
+    shots: 10,
+    metric: "Good drive? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Simulate real holes"
+  },
+  play_practice_full: {
+    name: "Play Practice Sequence",
+    shots: 9,
+    metric: "Good shot? (yes/no)",
+    metricType: "boolean",
+    scoring: (value) => value === 'yes' ? 1 : 0,
+    goal: "Simulate play"
+  },
+  par_18_weekly: {
+    name: "Par 18 Weekly Challenge",
+    shots: 9,
+    metric: "Strokes (chip+putt)",
+    metricType: "numeric",
+    scoring: (value) => value <= 2 ? 1 : 0,
+    goal: "≤18 total"
+  },
   driver_dispersion_game: {
     name: "Driver Dispersion Game",
     shots: 20,
     metric: "Offline (yards)",
-    metricType: "directional", // left/right tracking
+    metricType: "directional",
     scoring: (value) => {
       const distance = Math.abs(parseFloat(value))
       if (distance < 25) return 2
@@ -51,7 +211,7 @@ const DRILL_CONFIGS = {
     name: "7 Iron Dispersion Game",
     shots: 15,
     metric: "Offline (yards)",
-    metricType: "directional", // left/right tracking
+    metricType: "directional",
     scoring: (value) => {
       const distance = Math.abs(parseFloat(value))
       if (distance <= 10) return 2
@@ -64,6 +224,7 @@ const DRILL_CONFIGS = {
     name: "Strike Ladder",
     shots: 5,
     metric: "Center strike? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: 5
   },
@@ -71,6 +232,7 @@ const DRILL_CONFIGS = {
     name: "Lag Putting Game",
     shots: 10,
     metric: "Distance from hole (ft)",
+    metricType: "numeric",
     scoring: (value) => value <= 3 ? 1 : 0,
     goal: "50%"
   },
@@ -78,6 +240,7 @@ const DRILL_CONFIGS = {
     name: "Up & Down Simulation",
     shots: 10,
     metric: "Up & down? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: "50%"
   },
@@ -85,6 +248,7 @@ const DRILL_CONFIGS = {
     name: "Driver Combine Test",
     shots: 10,
     metric: "Fairway hit? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: "Track score"
   },
@@ -92,6 +256,7 @@ const DRILL_CONFIGS = {
     name: "Iron Combine",
     shots: 10,
     metric: "On target line? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: "Track score"
   },
@@ -99,6 +264,7 @@ const DRILL_CONFIGS = {
     name: "3-6-9 Putting Game",
     shots: 3,
     metric: "Made? (yes/no)",
+    metricType: "boolean",
     scoring: (value) => value === 'yes' ? 1 : 0,
     goal: "Complete all"
   },
@@ -106,6 +272,7 @@ const DRILL_CONFIGS = {
     name: "Wedge Combine",
     shots: 10,
     metric: "Distance from hole (ft)",
+    metricType: "numeric",
     scoring: (value) => {
       if (value <= 10) return 2
       if (value <= 20) return 1
@@ -117,6 +284,7 @@ const DRILL_CONFIGS = {
     name: "Par 18 Game",
     shots: 9,
     metric: "Strokes (chip+putt)",
+    metricType: "numeric",
     scoring: (value) => value <= 2 ? 1 : 0,
     goal: "≤18 total"
   },
@@ -124,6 +292,7 @@ const DRILL_CONFIGS = {
     name: "Full Combine Session",
     shots: 9,
     metric: "Score (par=4)",
+    metricType: "numeric",
     scoring: (value) => Math.max(0, 4 - value),
     goal: "Track score"
   }
