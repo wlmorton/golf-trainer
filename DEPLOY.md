@@ -9,29 +9,35 @@
 ### 1. Push to GitHub
 
 ```bash
-git init
 git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin YOUR_GITHUB_REPO_URL
-git push -u origin main
+git commit -m "Add PostgreSQL support for persistent data"
+git push origin main
 ```
 
-### 2. Deploy Backend on Render
+### 2. Create PostgreSQL Database on Render
 
-1. Go to https://render.com and sign up/login
-2. Click "New +" → "Web Service"
-3. Connect your GitHub repository
-4. Configure:
-   - **Name**: golf-trainer-backend
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r backend/requirements.txt`
-   - **Start Command**: `cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Plan**: Free
-5. Click "Create Web Service"
-6. **Copy the backend URL** (e.g., `https://golf-trainer-backend.onrender.com`)
+1. Go to https://dashboard.render.com
+2. Click **"New +"** → **"PostgreSQL"**
+3. Configure:
+   - **Name**: golf-trainer-db
+   - **Database**: golf_trainer
+   - **User**: (auto-generated)
+   - **Region**: Same as your backend
+   - **Plan**: **Free**
+4. Click **"Create Database"**
+5. **IMPORTANT**: Copy the **"Internal Database URL"** (starts with `postgres://`)
 
-### 3. Deploy Frontend on Render
+### 3. Update Backend Service
+
+1. Go to your backend service in Render
+2. Click **"Environment"** tab
+3. Add environment variable:
+   - **Key**: `DATABASE_URL`
+   - **Value**: Paste the Internal Database URL from step 2
+4. Click **"Save Changes"**
+5. Service will auto-redeploy
+
+### 4. Deploy Frontend (if not already deployed)
 
 1. Click "New +" → "Static Site"
 2. Connect the same GitHub repository
@@ -40,12 +46,9 @@ git push -u origin main
    - **Build Command**: `cd frontend && npm install && npm run build`
    - **Publish Directory**: `frontend/dist`
    - **Plan**: Free
-4. **Before creating**, add Environment Variable:
-   - Key: `VITE_API_URL`
-   - Value: Your backend URL from step 2
-5. Click "Create Static Site"
+4. Click "Create Static Site"
 
-### 4. Update Frontend Config (Important!)
+### 5. Update Frontend Config
 
 Update `frontend/src/config.js` with your actual backend URL:
 
@@ -64,37 +67,31 @@ git commit -m "Update backend URL"
 git push
 ```
 
-Render will auto-redeploy the frontend.
+## Why PostgreSQL?
 
-### 5. Access Your App
+**Problem with SQLite on Render:**
+- Free tier services sleep after 15 min of inactivity
+- When they wake up, the filesystem can be reset
+- **Your data gets deleted** 😱
 
-- Frontend: `https://golf-trainer-frontend.onrender.com`
-- Backend API: `https://golf-trainer-backend.onrender.com`
+**PostgreSQL Solution:**
+- Separate database service that never sleeps
+- Data persists forever (even on free tier)
+- Your training data is safe! ✅
 
-### 6. Install on iPhone
+## Verify It's Working
 
-1. Open Safari on iPhone
-2. Navigate to your frontend URL
-3. Tap Share button
-4. Select "Add to Home Screen"
-5. Tap "Add"
+1. Complete a drill and save it
+2. Wait a few hours (let the service sleep)
+3. Come back and check - your data should still be there!
+
+## Local Development
+
+The app automatically uses SQLite when running locally (no DATABASE_URL set), so you don't need PostgreSQL installed on your computer.
 
 ## Notes
 
 - **Free tier**: Backend sleeps after 15 min of inactivity (first request takes ~30s to wake)
-- **Database**: SQLite persists on Render's disk (backed up automatically)
+- **Database**: PostgreSQL free tier = 1GB storage (plenty for training data)
 - **Auto-deploy**: Every git push triggers a new deployment
 - **Upgrade**: $7/month removes sleep and adds more resources
-
-## Troubleshooting
-
-If backend doesn't start:
-- Check Render logs in dashboard
-- Verify `requirements.txt` has all dependencies
-- Ensure Python version is 3.11+
-
-If frontend can't reach backend:
-- Check CORS settings in `backend/main.py`
-- Verify API_URL in `frontend/src/config.js`
-- Check browser console for errors
-- Make sure backend URL doesn't have trailing slash
