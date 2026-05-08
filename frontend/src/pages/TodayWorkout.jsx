@@ -19,6 +19,9 @@ function TodayWorkout() {
 
   // List of drill IDs that use shot tracking
   const GAME_DRILLS = [
+    'stack_system',
+    'stack_short',
+    'stack_maintenance',
     'driver_dispersion_game',
     'fairway_finder',
     '7iron_dispersion_game',
