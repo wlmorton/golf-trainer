@@ -40,7 +40,7 @@ PHASE1_DAYS = {
         "drills": [
             {
                 "id": "stack_system",
-                "name": "Stack System",
+                "name": "Stack System 🎯",
                 "duration": "25 min",
                 "instructions": "Follow the Stack app Foundation program. Record your speeds every session.",
             },
@@ -110,7 +110,7 @@ PHASE1_DAYS = {
         "drills": [
             {
                 "id": "stack_short",
-                "name": "Stack System",
+                "name": "Stack System 🎯",
                 "duration": "20-25 min",
                 "instructions": "Follow the Stack app session for today.",
             },
@@ -160,7 +160,7 @@ PHASE2_DAYS = {
         "drills": [
             {
                 "id": "stack_system",
-                "name": "Stack System",
+                "name": "Stack System 🎯",
                 "duration": "25 min",
                 "instructions": "Follow the Stack program. Track speeds.",
             },
@@ -206,7 +206,7 @@ PHASE2_DAYS = {
         "drills": [
             {
                 "id": "stack_short",
-                "name": "Stack System",
+                "name": "Stack System 🎯",
                 "duration": "20-25 min",
                 "instructions": "Follow the Stack app session.",
             },
@@ -238,7 +238,7 @@ PHASE3_DAYS = {
         "drills": [
             {
                 "id": "stack_system",
-                "name": "Stack System (Maintenance)",
+                "name": "Stack System (Maintenance) 🎯",
                 "duration": "20 min",
                 "instructions": "Stack 2x/week only (maintenance). Track speeds.",
             },
@@ -304,7 +304,7 @@ PHASE4_DAYS = {
             },
             {
                 "id": "stack_maintenance",
-                "name": "Stack System (Maintenance)",
+                "name": "Stack System (Maintenance) 🎯",
                 "duration": "15 min",
                 "instructions": "1-2x per week only. Maintain speed gains.",
             },

@@ -2,6 +2,30 @@ import { useState } from 'react'
 
 // Drill configurations with scoring rules
 const DRILL_CONFIGS = {
+  stack_system: {
+    name: "Stack System",
+    shots: 1, // Single entry for the session
+    metric: "Speed Tracking",
+    metricType: "stack_speed",
+    scoring: () => 0, // No scoring, just tracking
+    goal: "Track progress"
+  },
+  stack_short: {
+    name: "Stack System",
+    shots: 1,
+    metric: "Speed Tracking",
+    metricType: "stack_speed",
+    scoring: () => 0,
+    goal: "Track progress"
+  },
+  stack_maintenance: {
+    name: "Stack System (Maintenance)",
+    shots: 1,
+    metric: "Speed Tracking",
+    metricType: "stack_speed",
+    scoring: () => 0,
+    goal: "Track progress"
+  },
   driver_dispersion_game: {
     name: "Driver Dispersion Game",
     shots: 20,
@@ -110,6 +134,13 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
   const [shots, setShots] = useState([])
   const [currentInput, setCurrentInput] = useState('')
   const [direction, setDirection] = useState('straight') // left, right, straight
+  
+  // Stack system specific state
+  const [stackData, setStackData] = useState({
+    avg195g: '',
+    top195g: '',
+    notes: ''
+  })
 
   if (!config) {
     return (
@@ -206,6 +237,24 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
   }
 
   const handleComplete = () => {
+    // Handle Stack System separately
+    if (config.metricType === 'stack_speed') {
+      const shotData = {
+        type: 'stack_speed',
+        avg195g: parseFloat(stackData.avg195g) || 0,
+        top195g: parseFloat(stackData.top195g) || 0,
+        notes: stackData.notes,
+        config: {
+          name: config.name,
+          metric: config.metric,
+          goal: config.goal
+        }
+      }
+      const scoreDisplay = `Avg: ${stackData.avg195g} mph, Top: ${stackData.top195g} mph`
+      onComplete(scoreDisplay, shotData)
+      return
+    }
+
     const stats = calculateStats()
     if (!stats) return
 
@@ -224,6 +273,71 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
 
   const stats = calculateStats()
   const isComplete = shots.length >= config.shots
+  const isStackComplete = config.metricType === 'stack_speed' && stackData.avg195g && stackData.top195g
+
+  // Stack System UI
+  if (config.metricType === 'stack_speed') {
+    return (
+      <div className="shot-tracker">
+        <h3>{config.name}</h3>
+        <div className="tracker-info">
+          <span className="metric-label">Record your swing speeds from today's Stack session</span>
+        </div>
+
+        <div className="stack-input-section">
+          <div className="input-group">
+            <label>Average Speed (195g max swings)</label>
+            <input
+              type="number"
+              step="0.1"
+              value={stackData.avg195g}
+              onChange={(e) => setStackData({...stackData, avg195g: e.target.value})}
+              placeholder="e.g., 112.5"
+              className="shot-input"
+            />
+            <span className="input-unit">mph</span>
+          </div>
+
+          <div className="input-group">
+            <label>Top Speed (195g max swings)</label>
+            <input
+              type="number"
+              step="0.1"
+              value={stackData.top195g}
+              onChange={(e) => setStackData({...stackData, top195g: e.target.value})}
+              placeholder="e.g., 115.2"
+              className="shot-input"
+            />
+            <span className="input-unit">mph</span>
+          </div>
+
+          <div className="input-group">
+            <label>Notes (optional)</label>
+            <textarea
+              value={stackData.notes}
+              onChange={(e) => setStackData({...stackData, notes: e.target.value})}
+              placeholder="How did the session feel?"
+              className="shot-input"
+              rows="3"
+            />
+          </div>
+        </div>
+
+        <div className="tracker-actions">
+          <button onClick={onCancel} className="btn-secondary">
+            Cancel
+          </button>
+          <button 
+            onClick={handleComplete} 
+            className="btn-primary"
+            disabled={!isStackComplete}
+          >
+            Complete Session
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="shot-tracker">
