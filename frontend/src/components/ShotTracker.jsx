@@ -37,9 +37,9 @@ const DRILL_CONFIGS = {
   foot_spray: {
     name: "Foot Spray Contact Drill",
     shots: 20,
-    metric: "Center contact? (yes/no)",
-    metricType: "boolean",
-    scoring: (value) => value === 'yes' ? 1 : 0,
+    metric: "Contact location",
+    metricType: "contact_location",
+    scoring: (value) => value === 'center' ? 1 : 0,
     goal: "Track center contact %"
   },
   low_point_towel: {
@@ -371,6 +371,18 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
     let leftCount = 0
     let rightCount = 0
     let straightCount = 0
+    let heelCount = 0
+    let centerCount = 0
+    let toeCount = 0
+    
+    // Handle contact location tracking
+    if (config.metricType === 'contact_location') {
+      shots.forEach(shot => {
+        if (shot === 'heel') heelCount++
+        else if (shot === 'center') centerCount++
+        else if (shot === 'toe') toeCount++
+      })
+    }
     
     if (numericShots.length > 0) {
       // For directional metrics, calculate absolute values for avg/best/worst
@@ -401,7 +413,10 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
       count: shots.length,
       leftCount,
       rightCount,
-      straightCount
+      straightCount,
+      heelCount,
+      centerCount,
+      toeCount
     }
   }
 
@@ -517,7 +532,36 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
       </div>
 
       <div className="shot-input-section">
-        {config.metricType === 'directional' ? (
+        {config.metricType === 'contact_location' ? (
+          <>
+            <div className="direction-buttons">
+              <button 
+                onClick={() => {
+                  setShots([...shots, 'heel'])
+                }} 
+                className="direction-btn"
+              >
+                Heel
+              </button>
+              <button 
+                onClick={() => {
+                  setShots([...shots, 'center'])
+                }} 
+                className="direction-btn"
+              >
+                Center
+              </button>
+              <button 
+                onClick={() => {
+                  setShots([...shots, 'toe'])
+                }} 
+                className="direction-btn"
+              >
+                Toe
+              </button>
+            </div>
+          </>
+        ) : config.metricType === 'directional' ? (
           <>
             <div className="direction-buttons">
               <button 
@@ -637,6 +681,26 @@ function ShotTracker({ drillId, onComplete, onCancel }) {
                     </span>
                     <span className="pattern-right" style={{width: `${(stats.rightCount / shots.length) * 100}%`}}>
                       {stats.rightCount} →
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+          {config.metricType === 'contact_location' && stats.heelCount + stats.toeCount > 0 && (
+            <>
+              <div className="stat-box miss-pattern">
+                <span className="stat-label">Contact Pattern</span>
+                <div className="pattern-visual">
+                  <div className="pattern-bar">
+                    <span className="pattern-left" style={{width: `${(stats.heelCount / shots.length) * 100}%`}}>
+                      Heel {stats.heelCount}
+                    </span>
+                    <span className="pattern-straight">
+                      Center {stats.centerCount}
+                    </span>
+                    <span className="pattern-right" style={{width: `${(stats.toeCount / shots.length) * 100}%`}}>
+                      Toe {stats.toeCount}
                     </span>
                   </div>
                 </div>

@@ -16,14 +16,15 @@ def get_start_date():
         c.execute("SELECT value FROM settings WHERE key = 'start_date'")
         row = c.fetchone()
         if row:
-            return datetime.fromisoformat(row[0])
-    except:
-        pass
+            date_str = row['value'] if USE_POSTGRES else row[0]
+            return datetime.fromisoformat(date_str)
+    except Exception as e:
+        print(f"Error getting start date: {e}")
     finally:
         conn.close()
     
-    # Default to April 20, 2026 if not set
-    return datetime(2026, 4, 20)
+    # Default to today if not set
+    return datetime.now()
 
 def get_current_week() -> int:
     """Calculate current week number based on start date."""
