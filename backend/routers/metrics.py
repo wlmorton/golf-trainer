@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
-from database import get_db
+from database import get_db, USE_POSTGRES
 
 router = APIRouter()
 
@@ -27,6 +27,13 @@ def log_weekly_metrics(metrics: WeeklyMetrics):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
+        INSERT INTO weekly_metrics 
+        (week_number, driver_avg_carry, driver_avg_offline, driver_speed, 
+         iron_7i_carry, iron_7i_offline, center_contact_pct,
+         wedge_50_pct_carry, wedge_75_pct_carry, wedge_full_carry,
+         putting_5ft_made, putting_5ft_total, putting_lag_rating, notes)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """ if USE_POSTGRES else """
         INSERT INTO weekly_metrics 
         (week_number, driver_avg_carry, driver_avg_offline, driver_speed, 
          iron_7i_carry, iron_7i_offline, center_contact_pct,
@@ -60,6 +67,11 @@ def get_weekly_metrics(week_number: int):
     c = conn.cursor()
     c.execute("""
         SELECT * FROM weekly_metrics 
+        WHERE week_number = %s
+        ORDER BY logged_at DESC
+        LIMIT 1
+    """ if USE_POSTGRES else """
+        SELECT * FROM weekly_metrics 
         WHERE week_number = ?
         ORDER BY logged_at DESC
         LIMIT 1
@@ -80,6 +92,10 @@ def get_metrics_history(limit: int = 10):
     c.execute("""
         SELECT * FROM weekly_metrics 
         ORDER BY week_number DESC
+        LIMIT %s
+    """ if USE_POSTGRES else """
+        SELECT * FROM weekly_metrics 
+        ORDER BY week_number DESC
         LIMIT ?
     """, (limit,))
     rows = c.fetchall()
@@ -98,6 +114,9 @@ def log_handicap(log: HandicapLog):
     c = conn.cursor()
     c.execute("""
         INSERT INTO handicap_log (handicap, notes)
+        VALUES (%s, %s)
+    """ if USE_POSTGRES else """
+        INSERT INTO handicap_log (handicap, notes)
         VALUES (?, ?)
     """, (log.handicap, log.notes))
     conn.commit()
@@ -110,6 +129,10 @@ def get_handicap_history(limit: int = 20):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
+        SELECT * FROM handicap_log 
+        ORDER BY logged_at DESC
+        LIMIT %s
+    """ if USE_POSTGRES else """
         SELECT * FROM handicap_log 
         ORDER BY logged_at DESC
         LIMIT ?

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timedelta
 from training_plan import get_day_plan, get_phase
-from database import get_db
+from database import get_db, USE_POSTGRES
 
 router = APIRouter()
 
@@ -55,6 +55,9 @@ def get_today_workout():
     c = conn.cursor()
     c.execute("""
         SELECT drill_id, score, notes FROM drill_completions 
+        WHERE week_number = %s AND day_number = %s
+    """ if USE_POSTGRES else """
+        SELECT drill_id, score, notes FROM drill_completions 
         WHERE week_number = ? AND day_number = ?
     """, (week, day))
     completions = {row[0]: {"score": row[1], "notes": row[2]} for row in c.fetchall()}
@@ -77,6 +80,9 @@ def get_specific_workout(week_number: int, day_number: int):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
+        SELECT drill_id, score, notes FROM drill_completions 
+        WHERE week_number = %s AND day_number = %s
+    """ if USE_POSTGRES else """
         SELECT drill_id, score, notes FROM drill_completions 
         WHERE week_number = ? AND day_number = ?
     """, (week_number, day_number))
@@ -123,10 +129,13 @@ def complete_drill(completion: DrillCompletion):
     try:
         c.execute("""
             INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes, shot_data)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """ if USE_POSTGRES else """
+            INSERT INTO drill_completions (week_number, day_number, drill_id, score, notes, shot_data)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (completion.week, completion.day, completion.drill_id, completion.score, completion.notes, completion.shot_data))
         conn.commit()
-        print(f"Successfully saved drill completion with id: {c.lastrowid}")
+        print(f"Successfully saved drill completion")
     except Exception as e:
         print(f"Error saving drill completion: {e}")
         conn.rollback()
@@ -142,6 +151,9 @@ def uncomplete_drill(completion: DrillCompletion):
     conn = get_db()
     c = conn.cursor()
     c.execute("""
+        DELETE FROM drill_completions 
+        WHERE week_number = %s AND day_number = %s AND drill_id = %s
+    """ if USE_POSTGRES else """
         DELETE FROM drill_completions 
         WHERE week_number = ? AND day_number = ? AND drill_id = ?
     """, (completion.week, completion.day, completion.drill_id))
@@ -185,6 +197,12 @@ def get_drill_history(drill_id: str, limit: int = 10):
     c.execute("""
         SELECT week_number, day_number, score, notes, shot_data, completed_at 
         FROM drill_completions 
+        WHERE drill_id = %s
+        ORDER BY completed_at DESC
+        LIMIT %s
+    """ if USE_POSTGRES else """
+        SELECT week_number, day_number, score, notes, shot_data, completed_at 
+        FROM drill_completions 
         WHERE drill_id = ?
         ORDER BY completed_at DESC
         LIMIT ?
@@ -213,6 +231,10 @@ def get_drill_stats(drill_id: str):
     
     # Get all scores
     c.execute("""
+        SELECT score, shot_data, completed_at FROM drill_completions 
+        WHERE drill_id = %s
+        ORDER BY completed_at DESC
+    """ if USE_POSTGRES else """
         SELECT score, shot_data, completed_at FROM drill_completions 
         WHERE drill_id = ?
         ORDER BY completed_at DESC

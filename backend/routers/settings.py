@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
-from database import get_db
+from database import get_db, USE_POSTGRES
 
 router = APIRouter()
 
@@ -14,21 +14,22 @@ def get_start_date():
     conn = get_db()
     c = conn.cursor()
     
-    # Create settings table if it doesn't exist
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            key TEXT PRIMARY KEY,
-            value TEXT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+    # Create settings table if it doesn't exist (for SQLite only, PostgreSQL has it from init_db)
+    if not USE_POSTGRES:
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
     
     c.execute("SELECT value FROM settings WHERE key = 'start_date'")
     row = c.fetchone()
     conn.close()
     
     if row:
-        start_date_str = row[0]
+        start_date_str = row[0] if USE_POSTGRES else row[0]
         start_date = datetime.fromisoformat(start_date_str)
         delta = datetime.now() - start_date
         current_week = (delta.days // 7) + 1
@@ -55,14 +56,15 @@ def set_start_date(update: StartDateUpdate):
     conn = get_db()
     c = conn.cursor()
     
-    # Create settings table if it doesn't exist
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            key TEXT PRIMARY KEY,
-            value TEXT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+    # Create settings table if it doesn't exist (for SQLite only)
+    if not USE_POSTGRES:
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
     
     # Validate date format
     try:
@@ -80,12 +82,19 @@ def set_start_date(update: StartDateUpdate):
             # Update existing
             c.execute("""
                 UPDATE settings 
+                SET value = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE key = 'start_date'
+            """ if USE_POSTGRES else """
+                UPDATE settings 
                 SET value = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE key = 'start_date'
             """, (update.start_date,))
         else:
             # Insert new
             c.execute("""
+                INSERT INTO settings (key, value, updated_at)
+                VALUES ('start_date', %s, CURRENT_TIMESTAMP)
+            """ if USE_POSTGRES else """
                 INSERT INTO settings (key, value, updated_at)
                 VALUES ('start_date', ?, CURRENT_TIMESTAMP)
             """, (update.start_date,))

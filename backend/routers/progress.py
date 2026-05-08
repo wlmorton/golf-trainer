@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from database import get_db
+from database import get_db, USE_POSTGRES
 from routers.workouts import get_current_week
 
 router = APIRouter()
@@ -19,6 +19,9 @@ def get_progress_overview():
     # Drills this week
     c.execute("""
         SELECT COUNT(*) FROM drill_completions 
+        WHERE week_number = %s
+    """ if USE_POSTGRES else """
+        SELECT COUNT(*) FROM drill_completions 
         WHERE week_number = ?
     """, (week,))
     drills_this_week = c.fetchone()[0]
@@ -32,6 +35,12 @@ def get_progress_overview():
     
     # Metrics trend (last 4 weeks)
     c.execute("""
+        SELECT week_number, driver_speed, driver_avg_offline, center_contact_pct, 
+               iron_7i_offline, putting_5ft_made, putting_5ft_total
+        FROM weekly_metrics 
+        WHERE week_number >= %s
+        ORDER BY week_number ASC
+    """ if USE_POSTGRES else """
         SELECT week_number, driver_speed, driver_avg_offline, center_contact_pct, 
                iron_7i_offline, putting_5ft_made, putting_5ft_total
         FROM weekly_metrics 

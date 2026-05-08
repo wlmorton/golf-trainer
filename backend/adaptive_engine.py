@@ -5,7 +5,7 @@ Analyzes performance and adjusts training plan dynamically
 
 import json
 from typing import Dict, List, Optional
-from database import get_db
+from database import get_db, USE_POSTGRES
 
 # Performance thresholds for each drill type
 DRILL_THRESHOLDS = {
@@ -73,6 +73,11 @@ def get_weekly_performance(week: int) -> Dict:
     c = conn.cursor()
     
     c.execute("""
+        SELECT drill_id, score, shot_data, completed_at
+        FROM drill_completions
+        WHERE week_number = %s
+        ORDER BY completed_at DESC
+    """ if USE_POSTGRES else """
         SELECT drill_id, score, shot_data, completed_at
         FROM drill_completions
         WHERE week_number = ?
@@ -243,16 +248,21 @@ def save_weekly_adjustment(week: int, adjustments: Dict):
     conn = get_db()
     c = conn.cursor()
     
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS weekly_adjustments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            week_number INTEGER NOT NULL,
-            adjustments TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+    # Only create table for SQLite (PostgreSQL has it from init_db)
+    if not USE_POSTGRES:
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS weekly_adjustments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                week_number INTEGER NOT NULL,
+                adjustments TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
     
     c.execute("""
+        INSERT INTO weekly_adjustments (week_number, adjustments)
+        VALUES (%s, %s)
+    """ if USE_POSTGRES else """
         INSERT INTO weekly_adjustments (week_number, adjustments)
         VALUES (?, ?)
     """, (week, json.dumps(adjustments)))
@@ -267,6 +277,11 @@ def get_latest_adjustments(week: int) -> Optional[Dict]:
     c = conn.cursor()
     
     c.execute("""
+        SELECT adjustments FROM weekly_adjustments
+        WHERE week_number = %s
+        ORDER BY created_at DESC
+        LIMIT 1
+    """ if USE_POSTGRES else """
         SELECT adjustments FROM weekly_adjustments
         WHERE week_number = ?
         ORDER BY created_at DESC
